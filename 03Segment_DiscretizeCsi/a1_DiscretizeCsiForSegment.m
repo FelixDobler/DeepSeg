@@ -6,24 +6,25 @@
 clear
 sampleLen = 120; % the length of bins
 %sampleCategory = 10;
-%userNum = 'user1';
+userNum = 'user1';
 %userNum = 'user2';
 %userNum = 'user3';
 %userNum = 'user4';
-userNum = 'user5';
+% userNum = 'user5';
 saveDir = ['Data_DiscretizeCsi/',userNum,'_test_data']; %'Data_DiscretizeCsi/user2_data_label';
 
-dirMat = ['Data_CsiAmplitudeCut\',userNum];  %'Data_CsiAmplitudeCut\user2'
+dirMat = ['Data_CsiAmplitudeCut/',userNum];  %'Data_CsiAmplitudeCut\user2'
 SegmentFiles = dir([dirMat,'/','*.mat']); % 55user1_iw_1.mat
 numberFiles = length(SegmentFiles);
+
 
 for whichFile =1:numberFiles
     %fprintf('seectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
   
-    fprintf('seectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
+    fprintf('selectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
     data = load([dirMat,'/',SegmentFiles(whichFile).name]);
     lowpass = data.data_;
-    %lowpass = lowpass(1:20:end,:,:);%Êý¾Ý¼¯ËõÐ¡ÁË20±¶
+    %lowpass = lowpass(1:20:end,:,:);%ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½20ï¿½ï¿½
     
     lenData = size(lowpass);
     lenData = lenData(1);
@@ -33,7 +34,7 @@ for whichFile =1:numberFiles
     
     startSampleNum = sampleLen;
     endAampleNum = lenData - sampleLen;
-    sampleNumPerFile = endAampleNum - startSampleNum + 1; %Ã¿¸öÎÄ¼þÓÐ10¸öÑù±¾
+    sampleNumPerFile = endAampleNum - startSampleNum + 1; %Ã¿ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½10ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     data_=zeros(sampleLen,30,3,sampleNumPerFile);
     
     for i= startSampleNum+1:1:endAampleNum  %1:1:10 
@@ -43,7 +44,5 @@ for whichFile =1:numberFiles
     
     saveName = strrep(SegmentFiles(whichFile).name,'55','');
     %fprintf('size(data_)         : %s\n', num2str(size(data_)))
-    save([saveDir,'\',saveName], 'data_')
-
+    save([saveDir,'/',saveName], 'data_', '-v7.3')
 end
-  
