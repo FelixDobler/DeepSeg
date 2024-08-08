@@ -3,6 +3,6 @@ __pycache__/
 
 *.mat
 *.dat
-01Data_PreProcess/Data_RawCSIDat/
-04Segment_StateInference/saveModel/
+01Data_PreProcess/Data_RawCSIDat/*
+04Segment_StateInference/saveModel/*
 04Segment_StateInference/*ema
