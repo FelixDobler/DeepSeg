@@ -13,7 +13,7 @@ matDir = ['Data_CsiAmplitude/',matUser,'/']; %matDir = 'AmplitudeMat/user5/';
 isDeepSegData = false;
 saveCSIMat = false;
 
-addpath(genpath('matlabCsiTool/'));
+addpath(genpath('linux-80211n-csitool-supplementary/matlab/'));
 %addpath('C:\Program Files\MATLAB\R2018a\bin\dyc');
 
 

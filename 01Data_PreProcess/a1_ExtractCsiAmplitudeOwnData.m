@@ -7,7 +7,7 @@ datDir = 'Data_RawCSIDat/user1_Bai_ShiQing_dat/';      matUser = 'user1';
 %datDir = 'DataRawCSIDat/user5_Yan_Di_dat/';          matUser = 'user5';
 matDir = ['Data_CsiAmplitude/',matUser,'/']; %matDir = 'AmplitudeMat/user5/';
 action_files = dir(fullfile(datDir,'*.dat'));
-addpath(genpath('matlabCsiTool/'));
+addpath(genpath('linux-80211n-csitool-supplementary/matlab/'));
 %addpath('C:\Program Files\MATLAB\R2018a\bin\dyc');
 % for i_text = 1:length(action_files)
 %     fprintf('read dat  : %s -- fileName: %s\n',  num2str(i_text),action_files(i_text).name)
