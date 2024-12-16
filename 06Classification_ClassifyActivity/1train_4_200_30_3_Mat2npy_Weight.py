@@ -2,7 +2,9 @@ import os
 import time
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 import sys
 from sklearn import metrics
 import h5py
@@ -11,9 +13,6 @@ from networkCNN import classifier
 
 
 import argparse
-
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-
 #parser is used to accept parameters from commandlines,such as seting epoch=10:python train_CSI.py --epoch 10 
 parser = argparse.ArgumentParser(description='')
 #parser.add_argument('--epoch', dest='epoch', type=int, default=200, help='# of epoch')
@@ -22,7 +21,7 @@ parser.add_argument('--trainCsi',   dest='trainCsi', default='actionBaseTrainCsi
 parser.add_argument('--trainLab',   dest='trainLab', default='actionBaseTrainLab.mat', help='Label data File For Train')
 parser.add_argument('--testCsi',    dest='testCsi',  default='actionTestCsi.mat', help='CSI data File For Test')
 parser.add_argument('--testLab',    dest='testLab',  default='actionTestLab.mat', help='Label data File For Test')
-parser.add_argument('--lr', dest='learning_rate', type=float, default=0.009, help='initial learning rate for adam [0.0003]')
+parser.add_argument('--lr', dest='learning_rate', type=float, default=0.006, help='initial learning rate for adam [0.0003]')
 parser.add_argument('--wtrain', dest='wtrain', type=bool, default=False, help='if input any values, this will be true')
 args = parser.parse_args()
 '''
@@ -37,15 +36,15 @@ if not os.path.exists(args.test_dir):
 
 flags = tf.app.flags
 flags.DEFINE_integer('gpu', 0, 'gpu [0]')   # which GPU is used. If it is beyong the number of GPU, CPU will is used.
-flags.DEFINE_integer('batch_size', 32, "batch size [25]")  # --------60:0.8417(1169)-------70:0.8597--------------
+flags.DEFINE_integer('batch_size', 16, "batch size [25]")  # --------60:0.8417(1169)-------70:0.8597--------------
 flags.DEFINE_integer('category_number', 10, 'number of categories in the dataset [125]') #---categoryNum = 125----
 flags.DEFINE_integer('epoch', 1600, 'epochs [1400]')
 flags.DEFINE_integer('decay_start', 1200, 'start learning rate decay [1200]')
-#flags.DEFINE_float('learning_rate', 0.0009, 'learning_rate[0.0003]')
 
-#flags.DEFINE_string('data_dir', './data/cifar-10-python/','data directory')
 flags.DEFINE_string('saveDir', './saveModel', 'save model directory')
 flags.DEFINE_integer('seed', 10, 'seed numpy')
+# flags.DEFINE_integer('seed', 31288432, 'seed numpy')
+
 flags.DEFINE_float('lbl_weight', 1.0, 'unlabeled weight [1.]')
 flags.DEFINE_float('ma_decay', 0.9999, 'exponential moving average for inference [0.9999]')
 #flags.DEFINE_boolean('validation', False, 'validation [False]')  
@@ -59,8 +58,8 @@ flags.DEFINE_float('gamma', 0.001, 'weight regularization')
 flags.DEFINE_float('eta', 1., 'perturbation latent code')
 flags.DEFINE_integer('freq_print', 10000, 'frequency image print tensorboard [10000]')
 flags.DEFINE_integer('step_print', 50, 'frequency scalar print tensorboard [50]')
-flags.DEFINE_integer('freq_test', 1, 'frequency test [500]')
-flags.DEFINE_integer('freq_save', 10, 'frequency saver epoch[50]')
+flags.DEFINE_integer('freq_test', 500, 'frequency test [500]')
+flags.DEFINE_integer('freq_save', 50, 'frequency saver epoch[50]')
 FLAGS = flags.FLAGS
 
 
@@ -165,11 +164,6 @@ def main(_):
     rng = np.random.RandomState(FLAGS.seed)  # seed labels
     
     (trainx,trainy,testx,testy) = loadData(args.dataDir, args.trainCsi,args.trainLab,args.testCsi,args.testLab)
-
-    print(f"trainy value counts: {np.unique(trainy, return_counts=True)}")
-    print(f"testy value counts: {np.unique(testy, return_counts=True)}")
-
-
     rng_data = np.random.RandomState(rng.randint(0, 2**10))  # seed shuffling    
     inds = rng_data.permutation(trainx.shape[0])   #-----------------xiao--------shuffling data-------------
     trainx = trainx[inds]
