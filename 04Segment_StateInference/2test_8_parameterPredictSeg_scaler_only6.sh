@@ -1,7 +1,7 @@
-modelPath="./saveModel/model-9"
-dataDir="data/Data_DiscretizeCsi/user1_test_data"
+modelPath="./saveModel/model-100"
+dataDir="../03Segment_DiscretizeCsi/Data_DiscretizeCsi/ownUser1_test_data"
 
-python 2test_8_parameterPredictSeg_scaler.py --csiFile user1_iw_6.mat --dataDir $dataDir --modelDir $modelPath
+python 2test_8_parameterPredictSeg_scaler.py --csiFile ownUser1_iw_1.mat --dataDir $dataDir --modelDir $modelPath --labelFile segmentTestLab.mat
 # python 2test_8_parameterPredictSeg_scaler.py --csiFile user1_ph_6.mat --dataDir $dataDir --modelDir $modelPath
 # python 2test_8_parameterPredictSeg_scaler.py --csiFile user1_rp_6.mat --dataDir $dataDir --modelDir $modelPath
 # python 2test_8_parameterPredictSeg_scaler.py --csiFile user1_sd_6.mat --dataDir $dataDir --modelDir $modelPath

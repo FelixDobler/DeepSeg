@@ -4,45 +4,61 @@
 % This is to discreize continuous CSI data into bins  for segmentation
 %
 clear
-sampleLen = 120; % the length of bins
+sampleLen = 60; % the length of bins
 %sampleCategory = 10;
-userNum = 'user1';
+
+dir_filter = 'ownUser*a*';
+data_dir = {'..', '01Data_PreProcess', 'Data_CsiAmplitudeCut'};
+folders = dir(fullfile(data_dir{:}, dir_filter));
+folders = folders([folders.isdir] & ~startsWith({folders.name}, '.'));
+folderNames = {folders.name};
+
+% userNum = 'ownUser1';
+%userNum = 'user1';
 %userNum = 'user2';
 %userNum = 'user3';
 %userNum = 'user4';
 % userNum = 'user5';
-saveDir = ['Data_DiscretizeCsi/',userNum,'_test_data']; %'Data_DiscretizeCsi/user2_data_label';
 
-dirMat = ['Data_CsiAmplitudeCut/',userNum];  %'Data_CsiAmplitudeCut\user2'
-SegmentFiles = dir([dirMat,'/','*.mat']); % 55user1_iw_1.mat
-numberFiles = length(SegmentFiles);
+for i = 1:length(folderNames)
+    user = folderNames{i};
+    display("Processing user: " + user);
 
+    save_dir = {'Data_DiscretizeCsi', strcat(user, '_test_data')}; %'Data_DiscretizeCsi/user2_data_label';
+    load_dir = {data_dir{:}, user}; %'Data_CsiAmplitudeCut\user2'
+    SegmentFiles = dir(fullfile(load_dir{:}, '*.mat')); % 55user1_iw_1.mat
+    numberFiles = length(SegmentFiles);
 
-for whichFile =1:numberFiles
-    %fprintf('seectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
-  
-    fprintf('selectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
-    data = load([dirMat,'/',SegmentFiles(whichFile).name]);
-    lowpass = data.data_;
-    %lowpass = lowpass(1:20:end,:,:);%���ݼ���С��20��
-    
-    lenData = size(lowpass);
-    lenData = lenData(1);
-    lowpassDiff = diff(lowpass); 
-    %lowpassDiff = lowpass;
+    for whichFile = 1:numberFiles
+        %fprintf('seectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
 
-    
-    startSampleNum = sampleLen;
-    endAampleNum = lenData - sampleLen;
-    sampleNumPerFile = endAampleNum - startSampleNum + 1; %ÿ���ļ���10������
-    data_=zeros(sampleLen,30,3,sampleNumPerFile);
-    
-    for i= startSampleNum+1:1:endAampleNum  %1:1:10 
+        fprintf('selectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
+        data = load(fullfile(load_dir{:}, SegmentFiles(whichFile).name));
+        lowpass = data.data_;
+        %lowpass = lowpass(1:20:end,:,:);%���ݼ���С��20��
+
+        lenData = size(lowpass);
+        lenData = lenData(1);
+        lowpassDiff = diff(lowpass);
+        %lowpassDiff = lowpass;
+
+        startSampleNum = sampleLen;
+        endSampleNum = lenData - sampleLen;
+        sampleNumPerFile = endSampleNum - startSampleNum + 1; %ÿ���ļ���10������
+        data_ = zeros(sampleLen, 30, 3, sampleNumPerFile);
+
+        for i = startSampleNum + 1:1:endSampleNum %1:1:10
+            data_(:, :, :, i) = lowpassDiff(i:i + sampleLen - 1, :, :);
+            x = i + sampleLen - 1;
+        end
+
+        saveName = SegmentFiles(whichFile).name;
         
-        data_(:,:,:,i)= lowpassDiff(i:i+sampleLen-1,:,:);
+
+        if ~exist(fullfile(save_dir{:}), 'dir')
+            mkdir(fullfile(save_dir{:}));
+        end
+        save(fullfile(save_dir{:}, saveName), 'data_', '-v7.3')
     end
-    
-    saveName = strrep(SegmentFiles(whichFile).name,'55','');
-    %fprintf('size(data_)         : %s\n', num2str(size(data_)))
-    save([saveDir,'/',saveName], 'data_', '-v7.3')
+
 end

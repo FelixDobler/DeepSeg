@@ -1,17 +1,18 @@
 % This plots the figure for manually checking segmentation results.
 clear
-userNum = 'user1'; % Which user
+% userNum = 'user1'; % Which user
+userNum = 'ownUser1'; % Which user
 selectFile = 1;    % Which file of this user
 % 'Label_ActivityStartEndForSegment/user1ManualSegment.csv'
 %cvsSegment = csvread(['Label_ActivityStartEndForSegment/',userNum,'ManualSegment.csv']);
-fid = fopen(['Label_CsiAmplitudeCut/',userNum,'ManualSegment.csv']);
-dcells = textscan(fid, '%f,%f,%f,%f,%s', 'HeaderLines', 1, 'EndOfLine', '\r\n');
+fid = fopen(fullfile('Label_CsiAmplitudeCut',userNum,'ManualSegment.csv'));
+dcells = textscan(fid, '%f,%f,%f,%f,%s', 'HeaderLines', 1, 'EndOfLine', '\n');
 fclose(fid); 
 dcellneeds = dcells(1:4);
 cvsSegment = cell2mat(dcellneeds);
 %disp(cvsSegment);
-dirMat = ['Data_CsiAmplitudeCut\',userNum];  %'Data_CsiAmplitude_Cut\user1'
-SegmentFiles = dir([dirMat,'/','*.mat']); % 55user1_iw_1.mat
+dirMat = {'Data_CsiAmplitudeCut',userNum};  %'Data_CsiAmplitude_Cut\user1'
+SegmentFiles = dir(fullfile(dirMat{:}, '*.mat')); % 55user1_iw_1.mat
 numberFiles = length(SegmentFiles);
 for whichFile =1:numberFiles
     %fprintf('seectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
@@ -19,7 +20,7 @@ for whichFile =1:numberFiles
         continue;
     end
     fprintf('seectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
-    data = load([dirMat,'/',SegmentFiles(whichFile).name]);
+    data = load(fullfile(dirMat{:},SegmentFiles(whichFile).name));
     
     originalData = data.data_;
     sizeOfData = size(originalData);
@@ -33,7 +34,7 @@ for whichFile =1:numberFiles
     
     
     figure(1) % for original data
-    dcm_obj = datacursormode(gcf); % change Value of Êý¾ÝÓÎ±ê
+    dcm_obj = datacursormode(gcf); % change Value of ï¿½ï¿½ï¿½ï¿½ï¿½Î±ï¿½
     set(dcm_obj,'UpdateFcn',@NewCallback) 
     plot(originalData(:,1,1))     % plot wave figure of amplitude 
     hold on
@@ -48,7 +49,7 @@ for whichFile =1:numberFiles
     
     
     figure(2) % for lowpass data
-    dcm_obj = datacursormode(gcf); % change Value of Êý¾ÝÓÎ±ê
+    dcm_obj = datacursormode(gcf); % change Value of ï¿½ï¿½ï¿½ï¿½ï¿½Î±ï¿½
     set(dcm_obj,'UpdateFcn',@NewCallback) 
     plot(lowpassDiff(:,1,1)) % plot wave figure of amplitude   
 

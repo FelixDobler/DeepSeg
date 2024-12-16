@@ -23,8 +23,10 @@ def gaussian_noise_layer(input_layer, std):
 def classifier(inp, is_training, init=False, reuse=False, getter =None,category=125):
     with tf.variable_scope('discriminator_model', reuse=reuse,custom_getter=getter):
         counter = {}
-        #x = tf.reshape(inp, [-1, 32, 32, 3])
-        x = tf.reshape(inp, [-1, 120, 30, 3])
+        print("input shape:",inp.shape)
+        #x = tf.reshape(inp, [-1, 120, 30, 3])
+        x = tf.reshape(inp, [-1, 60, 30, 3])
+        print("tf shapes:")
         x = tf.layers.dropout(x, rate=0.2, training=is_training, name='dropout_0')
 
         x = nn.conv2d(x, 96, nonlinearity=leakyReLu, init=init, counters=counter)                #  64*175*30*96
@@ -36,8 +38,8 @@ def classifier(inp, is_training, init=False, reuse=False, getter =None,category=
 
         x = nn.conv2d(x, 192, nonlinearity=leakyReLu, init=init, counters=counter)               #  64*40*15*192
         x = nn.conv2d(x, 192, nonlinearity=leakyReLu, init=init, counters=counter)               #  64*40*15*192
-        #x = nn.conv2d(x, 192, stride=[2, 2], nonlinearity=leakyReLu, init=init, counters=counter)
-        x = nn.conv2d(x, 192, stride=[4, 2], nonlinearity=leakyReLu, init=init, counters=counter)#  64*8*8*192
+        x = nn.conv2d(x, 192, stride=[2, 2], nonlinearity=leakyReLu, init=init, counters=counter)
+        # x = nn.conv2d(x, 192, stride=[4, 2], nonlinearity=leakyReLu, init=init, counters=counter)#  64*8*8*192
 
         x = tf.layers.dropout(x, rate=0.5, training=is_training, name='dropout_2')               #  64*8*8*192
 

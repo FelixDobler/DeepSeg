@@ -7,7 +7,7 @@ Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib.framework.python.ops import add_arg_scope
+# from tensorflow.contrib.framework.python.ops import add_arg_scope
 
 def int_shape(x):
     return list(map(int, x.get_shape()))
@@ -143,7 +143,7 @@ def get_name(layer_name, counters):
     counters[layer_name] += 1
     return name
 
-@add_arg_scope
+# @add_arg_scope
 def dense(x, num_units, nonlinearity=None, init_scale=1., counters={},init=False, ema=None, train_scale=True, init_w=tf.random_normal_initializer(0, 0.05),**kwargs):
     ''' fully connected layer '''
     name = get_name('dense', counters)
@@ -178,7 +178,7 @@ def dense(x, num_units, nonlinearity=None, init_scale=1., counters={},init=False
                 x = nonlinearity(x)
             return x
 
-@add_arg_scope
+# @add_arg_scope
 def conv2d(x, num_filters, filter_size=[3,3], stride=[1,1], pad='SAME', nonlinearity=None, init_scale=1., counters={}, init=False, ema=None, **kwargs):
     ''' convolutional layer '''
     name = get_name('conv2d', counters)
@@ -215,7 +215,7 @@ def conv2d(x, num_filters, filter_size=[3,3], stride=[1,1], pad='SAME', nonlinea
                 x = nonlinearity(x)
             return x
 
-@add_arg_scope
+# @add_arg_scope
 def deconv2d(x, num_filters, filter_size=[3,3], stride=[1,1], pad='SAME', nonlinearity=None, init_scale=1., counters={}, init=False, ema=None, **kwargs):
     ''' transposed convolutional layer '''
     name = get_name('deconv2d', counters)
@@ -258,7 +258,7 @@ def deconv2d(x, num_filters, filter_size=[3,3], stride=[1,1], pad='SAME', nonlin
                 x = nonlinearity(x)
             return x
 
-@add_arg_scope
+# @add_arg_scope
 def nin(x, num_units, **kwargs):
     """ a network in network layer (1x1 CONV) """
     s = int_shape(x)
@@ -268,7 +268,7 @@ def nin(x, num_units, **kwargs):
 
 ''' meta-layer consisting of multiple base layers '''
 
-@add_arg_scope
+# @add_arg_scope
 def gated_resnet(x, a=None, h=None, nonlinearity=concat_elu, conv=conv2d, init=False, counters={}, ema=None, dropout_p=0., **kwargs):
     xs = int_shape(x)
     num_filters = xs[-1]
@@ -304,23 +304,23 @@ def right_shift(x):
     xs = int_shape(x)
     return tf.concat(2,[tf.zeros([xs[0],xs[1],1,xs[3]]), x[:,:,:xs[2]-1,:]])
 
-@add_arg_scope
+# @add_arg_scope
 def down_shifted_conv2d(x, num_filters, filter_size=[2,3], stride=[1,1], **kwargs):
     x = tf.pad(x, [[0,0],[filter_size[0]-1,0], [int((filter_size[1]-1)/2),int((filter_size[1]-1)/2)],[0,0]])
     return conv2d(x, num_filters, filter_size=filter_size, pad='VALID', stride=stride, **kwargs)
 
-@add_arg_scope
+# @add_arg_scope
 def down_shifted_deconv2d(x, num_filters, filter_size=[2,3], stride=[1,1], **kwargs):
     x = deconv2d(x, num_filters, filter_size=filter_size, pad='VALID', stride=stride, **kwargs)
     xs = int_shape(x)
     return x[:,:(xs[1]-filter_size[0]+1),int((filter_size[1]-1)/2):(xs[2]-int((filter_size[1]-1)/2)),:]
 
-@add_arg_scope
+# @add_arg_scope
 def down_right_shifted_conv2d(x, num_filters, filter_size=[2,2], stride=[1,1], **kwargs):
     x = tf.pad(x, [[0,0],[filter_size[0]-1, 0], [filter_size[1]-1, 0],[0,0]])
     return conv2d(x, num_filters, filter_size=filter_size, pad='VALID', stride=stride, **kwargs)
 
-@add_arg_scope
+# @add_arg_scope
 def down_right_shifted_deconv2d(x, num_filters, filter_size=[2,2], stride=[1,1], **kwargs):
     x = deconv2d(x, num_filters, filter_size=filter_size, pad='VALID', stride=stride, **kwargs)
     xs = int_shape(x)

@@ -1,0 +1,42 @@
+AVG 87.7%
+
+Ep0 25s lossLab=1.3665 trainAcc=0.3026 testAcc=48.97 maxAcc=48.97 Ep0 testAccE=25.05 testF1E=12.42 maxAccE=25.05 maxF1E=12.42 Ep0
+Model saved in file: ./saveModel/model-0
+Ep1 21s lossLab=0.8649 trainAcc=0.6341 testAcc=77.66 maxAcc=77.66 Ep1 testAccE=25.03 testF1E=11.18 maxAccE=25.05 maxF1E=12.42 Ep0
+Ep2 21s lossLab=0.4271 trainAcc=0.8393 testAcc=83.70 maxAcc=83.70 Ep2 testAccE=25.03 testF1E=11.18 maxAccE=25.05 maxF1E=12.42 Ep0
+Ep3 21s lossLab=0.3058 trainAcc=0.8861 testAcc=85.28 maxAcc=85.28 Ep3 testAccE=25.03 testF1E=11.18 maxAccE=25.05 maxF1E=12.42 Ep0
+Ep4 21s lossLab=0.2475 trainAcc=0.9094 testAcc=81.46 maxAcc=85.28 Ep3 testAccE=25.45 testF1E=11.89 maxAccE=25.45 maxF1E=11.89 Ep4
+Ep5 21s lossLab=0.2058 trainAcc=0.9264 testAcc=86.16 maxAcc=86.16 Ep5 testAccE=28.11 testF1E=16.57 maxAccE=28.11 maxF1E=16.57 Ep5
+Ep6 21s lossLab=0.1716 trainAcc=0.9373 testAcc=84.68 maxAcc=86.16 Ep5 testAccE=38.00 testF1E=31.72 maxAccE=38.00 maxF1E=31.72 Ep6
+Ep7 21s lossLab=0.1520 trainAcc=0.9457 testAcc=87.00 maxAcc=87.00 Ep7 testAccE=50.42 testF1E=47.91 maxAccE=50.42 maxF1E=47.91 Ep7
+Ep8 21s lossLab=0.1268 trainAcc=0.9535 testAcc=86.76 maxAcc=87.00 Ep7 testAccE=62.29 testF1E=61.69 maxAccE=62.29 maxF1E=61.69 Ep8
+Ep9 21s lossLab=0.1119 trainAcc=0.9617 testAcc=87.45 maxAcc=87.45 Ep9 testAccE=73.02 testF1E=72.68 maxAccE=73.02 maxF1E=72.68 Ep9
+Ep10 21s lossLab=0.0985 trainAcc=0.9651 testAcc=86.81 maxAcc=87.45 Ep9 testAccE=78.88 testF1E=78.54 maxAccE=78.88 maxF1E=78.54 Ep10
+Ep11 21s lossLab=0.0915 trainAcc=0.9672 testAcc=86.21 maxAcc=87.45 Ep9 testAccE=83.41 testF1E=83.14 maxAccE=83.41 maxF1E=83.14 Ep11
+Ep12 21s lossLab=0.0789 trainAcc=0.9730 testAcc=87.66 maxAcc=87.66 Ep12 testAccE=86.66 testF1E=86.51 maxAccE=86.66 maxF1E=86.51 Ep12
+Ep13 21s lossLab=0.0674 trainAcc=0.9771 testAcc=84.34 maxAcc=87.66 Ep12 testAccE=88.03 testF1E=87.95 maxAccE=88.03 maxF1E=87.95 Ep13
+Ep14 21s lossLab=0.0664 trainAcc=0.9776 testAcc=85.73 maxAcc=87.66 Ep12 testAccE=88.61 testF1E=88.57 maxAccE=88.61 maxF1E=88.57 Ep14
+Ep15 21s lossLab=0.0666 trainAcc=0.9783 testAcc=85.94 maxAcc=87.66 Ep12 testAccE=89.14 testF1E=89.14 maxAccE=89.14 maxF1E=89.14 Ep15
+Ep16 21s lossLab=0.0568 trainAcc=0.9810 testAcc=89.06 maxAcc=89.06 Ep16 testAccE=89.32 testF1E=89.36 maxAccE=89.32 maxF1E=89.36 Ep16
+Ep17 21s lossLab=0.0561 trainAcc=0.9819 testAcc=88.32 maxAcc=89.06 Ep16 testAccE=89.43 testF1E=89.44 maxAccE=89.43 maxF1E=89.44 Ep17
+Ep18 21s lossLab=0.0482 trainAcc=0.9838 testAcc=87.71 maxAcc=89.06 Ep16 testAccE=89.32 testF1E=89.35 maxAccE=89.43 maxF1E=89.44 Ep17
+Ep19 21s lossLab=0.0507 trainAcc=0.9840 testAcc=86.81 maxAcc=89.06 Ep16 testAccE=89.58 testF1E=89.63 maxAccE=89.58 maxF1E=89.63 Ep19
+Ep20 21s lossLab=0.0426 trainAcc=0.9844 testAcc=86.58 maxAcc=89.06 Ep16 testAccE=89.61 testF1E=89.67 maxAccE=89.61 maxF1E=89.67 Ep20
+Ep21 21s lossLab=0.0519 trainAcc=0.9837 testAcc=88.42 maxAcc=89.06 Ep16 testAccE=89.43 testF1E=89.47 maxAccE=89.61 maxF1E=89.67 Ep20
+Ep22 21s lossLab=0.0391 trainAcc=0.9881 testAcc=88.45 maxAcc=89.06 Ep16 testAccE=89.58 testF1E=89.64 maxAccE=89.61 maxF1E=89.67 Ep20
+Ep23 21s lossLab=0.0392 trainAcc=0.9867 testAcc=87.76 maxAcc=89.06 Ep16 testAccE=89.64 testF1E=89.71 maxAccE=89.64 maxF1E=89.71 Ep23
+Ep24 21s lossLab=0.0389 trainAcc=0.9878 testAcc=84.81 maxAcc=89.06 Ep16 testAccE=89.77 testF1E=89.84 maxAccE=89.77 maxF1E=89.84 Ep24
+Ep25 21s lossLab=0.0386 trainAcc=0.9870 testAcc=88.32 maxAcc=89.06 Ep16 testAccE=89.72 testF1E=89.81 maxAccE=89.77 maxF1E=89.84 Ep24
+Ep26 21s lossLab=0.0350 trainAcc=0.9884 testAcc=85.18 maxAcc=89.06 Ep16 testAccE=89.79 testF1E=89.87 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep27 21s lossLab=0.0341 trainAcc=0.9893 testAcc=86.89 maxAcc=89.06 Ep16 testAccE=89.61 testF1E=89.69 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep28 21s lossLab=0.0330 trainAcc=0.9891 testAcc=88.42 maxAcc=89.06 Ep16 testAccE=89.72 testF1E=89.75 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep29 21s lossLab=0.0303 trainAcc=0.9909 testAcc=88.26 maxAcc=89.06 Ep16 testAccE=89.48 testF1E=89.54 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep30 21s lossLab=0.0404 trainAcc=0.9866 testAcc=87.58 maxAcc=89.06 Ep16 testAccE=89.64 testF1E=89.69 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep31 21s lossLab=0.0305 trainAcc=0.9905 testAcc=87.53 maxAcc=89.06 Ep16 testAccE=89.61 testF1E=89.67 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep32 21s lossLab=0.0267 trainAcc=0.9910 testAcc=89.32 maxAcc=89.32 Ep32 testAccE=89.45 testF1E=89.50 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep33 21s lossLab=0.0329 trainAcc=0.9896 testAcc=86.52 maxAcc=89.32 Ep32 testAccE=89.64 testF1E=89.66 maxAccE=89.79 maxF1E=89.87 Ep26
+Ep34 21s lossLab=0.0276 trainAcc=0.9911 testAcc=87.71 maxAcc=89.32 Ep32 testAccE=89.90 testF1E=89.93 maxAccE=89.90 maxF1E=89.93 Ep34
+Ep35 21s lossLab=0.0275 trainAcc=0.9923 testAcc=88.42 maxAcc=89.32 Ep32 testAccE=89.90 testF1E=89.92 maxAccE=89.90 maxF1E=89.93 Ep34
+Ep36 21s lossLab=0.0361 trainAcc=0.9876 testAcc=88.53 maxAcc=89.32 Ep32 testAccE=90.03 testF1E=90.04 maxAccE=90.03 maxF1E=90.04 Ep36
+Ep37 21s lossLab=0.0240 trainAcc=0.9926 testAcc=87.24 maxAcc=89.32 Ep32 testAccE=90.32 testF1E=90.35 maxAccE=90.32 maxF1E=90.35 Ep37
+Ep38 21s lossLab=0.0193 trainAcc=0.9940 testAcc=88.42 maxAcc=89.32 Ep32 testAccE=90.27 testF1E=90.28 maxAccE=90.32 maxF1E=90.35 Ep37

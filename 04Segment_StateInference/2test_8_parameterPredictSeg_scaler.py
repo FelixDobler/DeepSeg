@@ -10,6 +10,7 @@ import h5py
 
 #from networkCNN import classifier
 
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 import argparse
 
@@ -17,7 +18,7 @@ import argparse
 parser = argparse.ArgumentParser(description='')
 #parser.add_argument('--epoch', dest='epoch', type=int, default=200, help='# of epoch')
 parser.add_argument('--dataDir',   dest='dataDir', default='Data_DiscretizeCsi', help='directory of data')
-parser.add_argument('--csiFile',   dest='csiFile', default='user1_wd_6.mat', help='CSI data File Name')
+parser.add_argument('--csiFile',   dest='csiFile', default='user1_wd_1.mat', help='CSI data File Name')
 parser.add_argument('--labelFile', dest='labelFile', default='userSegmentLab12000.mat', help='Label data File Name')
 # python 4test_5_inputParameter.py --csiFileName actionTestCsi.mat --labelFileName actionTestLab.mat
 parser.add_argument('--modelDir', dest='modelDir', default='./saveModel/model-850', help='save model directory')
@@ -28,7 +29,7 @@ flags = tf.app.flags
 flags.DEFINE_integer('gpu', 0, 'gpu [0]')   # which GPU is used. If it is beyong the number of GPU, CPU will is used.
 #flags.DEFINE_string('modelDir', './saveModel/model-850', 'save model directory')  #-------------modelDir-------------
 
-#flags.DEFINE_integer('batch_size', 64, "batch size [25]")  
+flags.DEFINE_integer('batch_size', 16, "batch size [25]")  
 #flags.DEFINE_integer('seed', 10, 'seed numpy')
 #flags.DEFINE_string('data_dir', './data/cifar-10-python/','data directory')
 #flags.DEFINE_integer('category_number', 125, 'number of categories in the dataset [125]') #---categoryNum = 125----
@@ -156,6 +157,7 @@ def main(_):
     #----for outputing full test samples------20191206-----------
     #print(testx.shape[0]/FLAGS.batch_size)
     modNumber = testx.shape[0] % batch_size
+    print('modNumber:',modNumber)
     if( modNumber != 0):
         testx2 = testx[0:batch_size-modNumber,:,:,:]
         testy2 = testy[0:batch_size-modNumber]
@@ -164,6 +166,11 @@ def main(_):
         testy = np.concatenate((testy,testy2), axis=0)
         #print(testx.shape)
         nr_batches_test += 1
+        print('testx2.shape:',testx2.shape)
+        print('testy2.shape:',testy2.shape)
+
+        print('testx_enlarged.shape:',testx.shape)
+        print('testy_enlarged.shape:',testy.shape)
     
     
     #----if testx.shape[0] modulo  batch_size <> 0, there will be some samples to  be left, here fill some samples to testX------end--------
@@ -198,7 +205,7 @@ def main(_):
     softmax_out = tf.nn.softmax(logits_lab, name='softmax_out')
     softmax_out_ema = tf.nn.softmax(logits_ema, name='softmax_out_ema')
     #fopen_predict_ema = open(args.csiFile.replace(".mat","") + "_predict_ema", "w")
-    if(args.csiFile[8:10]=='_6'):
+    if(args.csiFile[-6:-4]=='_6'):
         stateLabelDir = 'StateLabel_DiscretizeCsi_only6/'
     else:
         stateLabelDir = 'StateLabel_DiscretizeCsi_1_5/'
@@ -218,10 +225,16 @@ def main(_):
                          lbl: testy[ran_from:ran_to],
                          is_training_pl: False}
             
+            print(ran_from,ran_to, testx[ran_from:ran_to].shape, testy[ran_from:ran_to].shape)
+            print(testy[ran_from:ran_to])
+
             #acc, acc_ema,y_pred,y_pred_ema = sess.run([accuracy_classifier, accuracy_ema,y_predict,y_predict_ema], feed_dict=feed_dict) # correct without entropy
             # --------added for computing entropy------xiao--------20191128-------begin------
             y_true = testy[ran_from:ran_to]
-            
+            print(f"y_predict: {y_predict.shape}")
+            print(f"y_predict_ema: {y_predict_ema.shape}")
+            print(f"feed_dict: {feed_dict.keys()}")
+            # acc, acc_ema,y_pred,y_pred_ema,softmax_entropy,softmax_entropy_ema = sess.run([accuracy_classifier, accuracy_ema,y_predict,y_predict_ema,softmax_out,softmax_out_ema], feed_dict=feed_dict) # correct without entropy
             acc, acc_ema,y_pred,y_pred_ema,softmax_entropy,softmax_entropy_ema = sess.run([accuracy_classifier, accuracy_ema,y_predict,y_predict_ema,softmax_out,softmax_out_ema], feed_dict=feed_dict) # correct without entropy
             #print("softmax_out_entropy:" + str(softmax_out_entropy))
             #----if testx.shape[0] modulo  batch_size <> 0, there will be some samples to  be left, here fill some samples to testX------begin------

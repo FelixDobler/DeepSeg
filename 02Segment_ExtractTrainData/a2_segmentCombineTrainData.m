@@ -19,29 +19,29 @@ segmentTrainCsi = [];
 segmentTrainLab = [];
 segmentTestCsi = [];
 segmentTestLab = [];
-currentDir = 'TrainingDataForSegment'  %currentDir = '20191220SegmentTrainNew'
-dataDir      = [currentDir, '/user1_data_label/'];
-combineCsiLabel(dataDir);
-dataDir      = [currentDir, '/user2_data_label/'];
-combineCsiLabel(dataDir);
-dataDir      = [currentDir, '/user3_data_label/'];
-combineCsiLabel(dataDir);
-dataDir      = [currentDir, '/user4_data_label/'];
-combineCsiLabel(dataDir);
-dataDir      = [currentDir, '/user5_data_label/'];
-combineCsiLabel(dataDir);
+currentDir = 'TrainingDataForSegment' %currentDir ='20191220SegmentTrainNew'
 
-%save([currentDir, '/segmentBaseCsi'],'segmentBaseCsi');
-%save([currentDir, '/segmentBaseLab'],'segmentBaseLab');
-%save([currentDir, '/segmentTrainCsi'],'segmentTrainCsi');
-%save([currentDir, '/segmentTrainLab'],'segmentTrainLab');
-save([currentDir, '/segmentTestCsi'],'segmentTestCsi', '-v7.3');
-save([currentDir, '/segmentTestLab'],'segmentTestLab', '-v7.3');
+% dir_filter = '*ownUser1_data_label';
+dir_filter = 'ownUser*a*_data_label';
+% dir_filter = 'user1*_data_label';
+folders = dir(fullfile('TrainingDataForSegment', dir_filter));
+folders = folders([folders.isdir] & ~startsWith({folders.name}, '.'));
+folderNames = {folders.name};
 
-segmentBaseTrainCsi = cat(4,segmentBaseCsi, segmentTrainCsi);
-segmentBaseTrainLab = [segmentBaseLab;segmentTrainLab];
-save([currentDir, '/segmentBaseTrainCsi'],'segmentBaseTrainCsi', '-v7.3');
-save([currentDir, '/segmentBaseTrainLab'],'segmentBaseTrainLab', '-v7.3');
+for i = 1:length(folderNames)
+    user = folderNames{i};
+    dataDir = {currentDir, user};
+    display(dataDir);
+    combineCsiLabel(dataDir);
+end
+
+save(fullfile(currentDir, 'segmentTestCsi'), 'segmentTestCsi', '-v7.3');
+save(fullfile(currentDir, 'segmentTestLab'), 'segmentTestLab', '-v7.3');
+
+segmentBaseTrainCsi = cat(4, segmentBaseCsi, segmentTrainCsi);
+segmentBaseTrainLab = [segmentBaseLab; segmentTrainLab];
+save(fullfile(currentDir, 'segmentBaseTrainCsi'), 'segmentBaseTrainCsi', '-v7.3');
+save(fullfile(currentDir, 'segmentBaseTrainLab'), 'segmentBaseTrainLab', '-v7.3');
 
 fprintf('size(segmentBaseTrainCsi)         : %s\n', num2str(size(segmentBaseTrainCsi)))
 fprintf('size(segmentBaseTrainLab)         : %s\n', num2str(size(segmentBaseTrainLab)))
@@ -49,42 +49,40 @@ fprintf('size(segmentTestCsi)         : %s\n', num2str(size(segmentTestCsi)))
 fprintf('size(segmentTestLab)         : %s\n', num2str(size(segmentTestLab)))
 
 function combineCsiLabel(dataDir)
-fileList = dir(strcat(dataDir,'*.mat'));
-numberFiles = length(fileList);
-global segmentBaseCsi;
-global segmentBaseLab;
-global segmentTrainCsi;
-global segmentTrainLab;
-global segmentTestCsi;
-global segmentTestLab;
+    fileList = dir(fullfile(dataDir{:}, '*.mat'));
+    % filter out the files that end in _label.mat
+    fileList = fileList(~contains({fileList.name}, '_label.mat'));
+    numberFiles = length(fileList);
+    global segmentBaseCsi;
+    global segmentBaseLab;
+    global segmentTrainCsi;
+    global segmentTrainLab;
+    global segmentTestCsi;
+    global segmentTestLab;
 
-for i=1:numberFiles
-    fprintf('i    : %s -- fieName: %s\n',  num2str(i),fileList(i).name)
-    %fprintf('size(data_)         : %s\n', num2str(size(data_)))
-    if ~isempty(strfind(fileList(i).name,'_1.mat'))  || ~isempty(strfind(fileList(i).name,'_2.mat'))
-        load([dataDir,fileList(i).name]);
-        segmentBaseCsi = cat(4,segmentBaseCsi, data_);
-        load([dataDir,strrep(fileList(i).name, '.mat', '_label.mat')]);
-        segmentBaseLab = [segmentBaseLab;label_];
-        fprintf('size(segmentBaseCsi)         : %s\n', num2str(size(segmentBaseCsi)))
-    end
-    
-    %if ~isempty(strfind(fileList(i).name,'_3.mat'))  || ~isempty(strfind(fileList(i).name,'_4.mat'))
-    if ~isempty(strfind(fileList(i).name,'_3.mat'))  || ~isempty(strfind(fileList(i).name,'_4.mat')) || ...
-            ~isempty(strfind(fileList(i).name,'_5.mat'))
-        load([dataDir,fileList(i).name]);
-        segmentTrainCsi = cat(4,segmentTrainCsi, data_);
-        load([dataDir,strrep(fileList(i).name, '.mat', '_label.mat')]);
-        segmentTrainLab = [segmentTrainLab;label_];
-    end
-    
-    %if ~isempty(strfind(fileList(i).name,'_5.mat'))  || ~isempty(strfind(fileList(i).name,'_6.mat'))
-    if ~isempty(strfind(fileList(i).name,'_6.mat'))
-        load([dataDir,fileList(i).name]);
-        segmentTestCsi = cat(4,segmentTestCsi, data_);
-        load([dataDir,strrep(fileList(i).name, '.mat', '_label.mat')]);
-        segmentTestLab = [segmentTestLab;label_];
-    end
-end
-end
+    for i = 1:numberFiles
+        fprintf('i    : %s -- fileName: %s\n', num2str(i), fileList(i).name)
 
+        load(fullfile(dataDir{:}, fileList(i).name));
+        load(fullfile(dataDir{:}, strrep(fileList(i).name, '.mat', '_label.mat')));
+
+        % extract the number from the file name
+        % example ownUser1a876_wd_3.mat should extract 3
+        sample_idx_match = regexp(fileList(i).name, '_(\d+).mat', 'tokens', 'once');
+        sample_idx = str2num(sample_idx_match{1});
+
+        if sample_idx == 5
+            segmentTestCsi = cat(4, segmentTestCsi, data_);
+            segmentTestLab = [segmentTestLab; label_];
+        % elseif sample_idx == 3 || sample_idx == 2
+        elseif sample_idx == 1 || sample_idx == 2 || sample_idx == 3
+            segmentBaseCsi = cat(4, segmentBaseCsi, data_);
+            segmentBaseLab = [segmentBaseLab; label_];
+        elseif sample_idx == 4 || sample_idx == 6
+            segmentTrainCsi = cat(4, segmentTrainCsi, data_);
+            segmentTrainLab = [segmentTrainLab; label_];
+        end
+
+    end
+
+end

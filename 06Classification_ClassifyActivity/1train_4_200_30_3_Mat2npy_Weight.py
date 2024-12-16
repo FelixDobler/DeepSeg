@@ -11,6 +11,9 @@ from networkCNN import classifier
 
 
 import argparse
+
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
 #parser is used to accept parameters from commandlines,such as seting epoch=10:python train_CSI.py --epoch 10 
 parser = argparse.ArgumentParser(description='')
 #parser.add_argument('--epoch', dest='epoch', type=int, default=200, help='# of epoch')
@@ -34,7 +37,7 @@ if not os.path.exists(args.test_dir):
 
 flags = tf.app.flags
 flags.DEFINE_integer('gpu', 0, 'gpu [0]')   # which GPU is used. If it is beyong the number of GPU, CPU will is used.
-flags.DEFINE_integer('batch_size', 16, "batch size [25]")  # --------60:0.8417(1169)-------70:0.8597--------------
+flags.DEFINE_integer('batch_size', 32, "batch size [25]")  # --------60:0.8417(1169)-------70:0.8597--------------
 flags.DEFINE_integer('category_number', 10, 'number of categories in the dataset [125]') #---categoryNum = 125----
 flags.DEFINE_integer('epoch', 1600, 'epochs [1400]')
 flags.DEFINE_integer('decay_start', 1200, 'start learning rate decay [1200]')
@@ -57,7 +60,7 @@ flags.DEFINE_float('eta', 1., 'perturbation latent code')
 flags.DEFINE_integer('freq_print', 10000, 'frequency image print tensorboard [10000]')
 flags.DEFINE_integer('step_print', 50, 'frequency scalar print tensorboard [50]')
 flags.DEFINE_integer('freq_test', 1, 'frequency test [500]')
-flags.DEFINE_integer('freq_save', 50, 'frequency saver epoch[50]')
+flags.DEFINE_integer('freq_save', 10, 'frequency saver epoch[50]')
 FLAGS = flags.FLAGS
 
 
@@ -91,7 +94,8 @@ def scaler(x, feature_range=(-1, 1)):
     return x
 def mat2Npy(data_dir, fileName,typeName):
     path= data_dir + fileName
-
+    print('path', path)
+    print(list(os.listdir(data_dir)))
     mat=h5py.File(path,'r') #   print(mat.keys()) # mat = sio.loadmat(path)  
     fileName = list(mat.keys())[0] #print(list(mat.keys())[0]) #fileName = fileName.replace('.mat','')  
     data=mat[fileName]
@@ -115,6 +119,15 @@ def loadData(dataDir,trainCsi,trainLab, testCsi, testLab):
     trainy= mat2Npy(dataDir,trainLab,'Label')     
     testx= mat2Npy(dataDir,testCsi,'Csi')
     testy= mat2Npy(dataDir,testLab,'Label') 
+
+
+    # unique_values, counts = np.unique(trainy, return_counts=True)
+
+    # # Display the results
+    # for value, count in zip(unique_values, counts):
+    #     print(f"TrainY: Value {value} occurs {count} times")
+    # exit()
+
     '''   # load Data    
     data_dir = 'data/'
     trainx=np.load(data_dir+'actionBaseTrainCsi.npy')   #-----------------xiao------load data--------------------
@@ -152,6 +165,11 @@ def main(_):
     rng = np.random.RandomState(FLAGS.seed)  # seed labels
     
     (trainx,trainy,testx,testy) = loadData(args.dataDir, args.trainCsi,args.trainLab,args.testCsi,args.testLab)
+
+    print(f"trainy value counts: {np.unique(trainy, return_counts=True)}")
+    print(f"testy value counts: {np.unique(testy, return_counts=True)}")
+
+
     rng_data = np.random.RandomState(rng.randint(0, 2**10))  # seed shuffling    
     inds = rng_data.permutation(trainx.shape[0])   #-----------------xiao--------shuffling data-------------
     trainx = trainx[inds]

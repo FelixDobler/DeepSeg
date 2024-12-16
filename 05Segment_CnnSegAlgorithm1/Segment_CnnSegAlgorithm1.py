@@ -26,7 +26,7 @@ parser.add_argument('--StateFile', dest='StateFile', default='StateLabel_Discret
 
 args = parser.parse_args()
 
-lenAction = round(4000/20) #动作大小
+lenAction = round(1200/20) #动作大小
 whichCol = 0 #whichCol = args.whichCol
 
 def longQueueModeRatePrevious(currentQ,predictResult,i):
@@ -341,7 +341,7 @@ def main(_):
         #predictDataDir = predResultDir + 'user1_wd_6.mat_predict_ema'
         data_dir = 'Data_CsiAmplitudeCut/'
         outFileName = outFileName + '.mat'
-        originalFile= data_dir + outFileName[:5] +'/' + '55' + outFileName # 'Data_CsiAmplitudeCut/user1/55user1_iw_1.mat'
+        originalFile= data_dir + outFileName[:5] +'/' + outFileName # 'Data_CsiAmplitudeCut/user1/55user1_iw_1.mat'
         size_labelOne = actionSampleExtract(startEndPoints,originalFile,outFileName,segmentResultDir)
         saveStartEndPoints(segmentResultDir,outFileName,startEndPoints) # save start and end points in .csv file
     
@@ -368,12 +368,14 @@ def saveStartEndPoints(segmentResultDir,outFileName,startEndPoints):
         fStartEnd.write(str(i+1) + ',' + str(int(startEndPoints[i,0])) + ',' + str(int(startEndPoints[i,1])) + '\n')
     fStartEnd.close()
 def combineStartEndPoints(saveDir,segmentResultDir):
-    fUser1 = open(saveDir+ '/'+'user1ManualSegment.csv','w')
-    fUser2 = open(saveDir+ '/'+'user2ManualSegment.csv','w')
-    fUser3 = open(saveDir+ '/'+'user3ManualSegment.csv','w')
-    fUser4 = open(saveDir+ '/'+'user4ManualSegment.csv','w')
-    fUser5 = open(saveDir+ '/'+'user5ManualSegment.csv','w')
-    fopenAll = [fUser1,fUser2,fUser3,fUser4,fUser5]
+    fOwnUser1 = open(saveDir+ '/'+'OwnUser1ManualSegment.csv','w')
+    # fUser1 = open(saveDir+ '/'+'user1ManualSegment.csv','w')
+    # fUser2 = open(saveDir+ '/'+'user2ManualSegment.csv','w')
+    # fUser3 = open(saveDir+ '/'+'user3ManualSegment.csv','w')
+    # fUser4 = open(saveDir+ '/'+'user4ManualSegment.csv','w')
+    # fUser5 = open(saveDir+ '/'+'user5ManualSegment.csv','w')
+    # fopenAll = [fUser1,fUser2,fUser3,fUser4,fUser5]
+    fopenAll = [fOwnUser1]
     allFiles = os.listdir(segmentResultDir)
     kk = 0
     for oneFile in allFiles:

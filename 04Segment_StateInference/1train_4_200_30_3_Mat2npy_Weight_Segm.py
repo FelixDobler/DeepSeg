@@ -9,6 +9,7 @@ import h5py
 
 from networkCNN_Seg120 import classifier
 
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 import argparse
 #parser is used to accept parameters from commandlines,such as seting epoch=10:python train_CSI.py --epoch 10 
@@ -22,19 +23,10 @@ parser.add_argument('--testLab',    dest='testLab',  default='segmentTestLab.mat
 parser.add_argument('--lr', dest='learning_rate', type=float, default=0.009, help='initial learning rate for adam [0.0003]')
 parser.add_argument('--wtrain', dest='wtrain', type=bool, default=False, help='if input any values, this will be true')
 args = parser.parse_args()
-'''
-if not os.path.exists(args.checkpoint_dir):
-    os.makedirs(args.checkpoint_dir)
-if not os.path.exists(args.sample_dir):
-    os.makedirs(args.sample_dir)
-if not os.path.exists(args.test_dir):
-    os.makedirs(args.test_dir)
-'''
-
 
 flags = tf.app.flags
 flags.DEFINE_integer('gpu', 0, 'gpu [0]')   # which GPU is used. If it is beyong the number of GPU, CPU will is used.
-flags.DEFINE_integer('batch_size', 16, "batch size [25]")  # --------60:0.8417(1169)-------70:0.8597--------------
+flags.DEFINE_integer('batch_size', 32, "batch size [25]")  # --------60:0.8417(1169)-------70:0.8597--------------
 flags.DEFINE_integer('category_number', 10, 'number of categories in the dataset [125]') #---categoryNum = 125----
 flags.DEFINE_integer('epoch', 1600, 'epochs [1400]')
 flags.DEFINE_integer('decay_start', 1200, 'start learning rate decay [1200]')
@@ -54,10 +46,10 @@ flags.DEFINE_integer('nabla', 1, 'choose regularization [1]')
 flags.DEFINE_float('gamma', 0.001, 'weight regularization')
 #flags.DEFINE_float('alpha', 40., 'displacement along data manifold') 
 flags.DEFINE_float('eta', 1., 'perturbation latent code')
-flags.DEFINE_integer('freq_print', 10000, 'frequency image print tensorboard [10000]')
-flags.DEFINE_integer('step_print', 50, 'frequency scalar print tensorboard [50]')
+flags.DEFINE_integer('freq_print', 1, 'frequency image print tensorboard [10000]')
+flags.DEFINE_integer('step_print', 1, 'frequency scalar print tensorboard [50]')
 flags.DEFINE_integer('freq_test', 1, 'frequency test [500]')
-flags.DEFINE_integer('freq_save', 50, 'frequency saver epoch[50]')
+flags.DEFINE_integer('freq_save', 10, 'frequency saver epoch[50]')
 FLAGS = flags.FLAGS
 
 
@@ -102,7 +94,7 @@ def mat2Npy(data_dir, fileName,typeName):
         data= np.transpose(data,axes=[1,0])
         dataReturn=np.zeros(data.shape[0])
         for i in range(dataReturn.shape[0]):
-            dataReturn[i]=data[i]-1    
+            dataReturn[i]=data[i]-1
     print(dataReturn.shape)
     return dataReturn
 def loadData(dataDir,trainCsi,trainLab, testCsi, testLab):
@@ -206,7 +198,7 @@ def main(_):
         else:
             loss_lab = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=lbl, logits=logits_lab)) # labeled_data_input_pl
         loss_class = FLAGS.lbl_weight * loss_lab    #------------consider manifold to improve performance-------------------
-        
+
     with tf.name_scope('optimizers'):
         # control op dependencies for batch norm and trainable variables
         tvars = tf.trainable_variables()
@@ -281,7 +273,7 @@ def main(_):
             # training
             for t in range(nr_batches_train):
 
-                display_progression_epoch(t, nr_batches_train)
+                # display_progression_epoch(t, nr_batches_train)
                 ran_from = t * FLAGS.batch_size
                 ran_to = (t + 1) * FLAGS.batch_size
                 
@@ -366,7 +358,6 @@ def main(_):
                 #sv.saver.save(sess, save_path)
                 saveModel.save(sess, save_path)  #----------to overcome the thing that Saver has 5 models limit---------------------
                 print("Model saved in file: %s" % (save_path))
-            
 
 
 if __name__ == '__main__':

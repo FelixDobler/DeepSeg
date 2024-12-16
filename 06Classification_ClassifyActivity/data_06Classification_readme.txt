@@ -10,7 +10,7 @@ Running Segment_CnnSegAlgorithm1_only6.bat in 05Segment_CnnSegAlgorithm1 can gen
 
 --------------------------------------------------------------------
 
-To use the manual marked segmentation results, use 12Classification_ExtractTrainData to generate the files (actionBaseTrainCsi.mat, actionBaseTrainLab.mat, actionTestCsi.mat and actionTestLab.mat).
+To use the manual marked segmentation results, use 02Classification_ExtractTrainData to generate the files (actionBaseTrainCsi.mat, actionBaseTrainLab.mat, actionTestCsi.mat and actionTestLab.mat).
 
 
 --------------------------------------------------------------------

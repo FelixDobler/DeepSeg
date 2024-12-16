@@ -14,29 +14,49 @@
 % Instead, static-state only contains the non-action part,
 % and motion-state only contains the action part.
 
+% plot:
+% blue is the label
+% yellow is the start-state
+% magenta is the motion-state
+% green is the idle-state
+
+% this is 
+
 clear
-sampleLen = 2400/20;
+sampleLen = 1200/20;
+% sampleLen = 2400/20;
 sampleCategory = 4;
-% userNum = 'user1';
-for userSelect = {'user1' 'user2' 'user3' 'user4' 'user5'}
-    userNum = userSelect{1,1}
-    
-    saveDir = ['TrainingDataForSegment/',userNum,'_data_label']; %'20191220SegmentTrainNew/user2_data_label';
+
+% dir_filter = '*ownUser1';
+dir_filter = 'ownUser*a*';
+% dir_filter = 'user1*';
+folders = dir(fullfile('Label_CsiAmplitudeCut', dir_filter));
+folders = folders([folders.isdir] & ~startsWith({folders.name}, '.'));
+folderNames = {folders.name};
+
+for i = 1:length(folderNames)
+    user = folderNames{i};
+    display(user);
+    saveDir = {'TrainingDataForSegment',strcat(user, '_data_label')}; %'20191220SegmentTrainNew/user2_data_label';
+    if ~exist(fullfile(saveDir{:}), 'dir')
+        mkdir(fullfile(saveDir{:}));
+    end
     whetherPlot = 0;
     selectFile = 1;  % for user1, diff(lowpass) of 14 15 17 20 is not obvious,
     startSampleNum = 1;
-    endAampleNum = 10;
-    sampleNumPerFile = endAampleNum - startSampleNum + 1; %ÿ���ļ���10������
-    %cvsSegment = csvread(['Label_ActivityCategoryStartEnd/',userNum,'ManualSegment.csv']);
-    % 'Label_ActivityCategoryStartEnd/user1ManualSegment.csv'
-    fid = fopen(['Label_CsiAmplitudeCut/',userNum, '/', 'ManualSegment.csv']);
-    dcells = textscan(fid, '%f,%f,%f,%f,%s', 'HeaderLines', 1, 'EndOfLine', '\r\n');
+    endSampleNum = 10;
+    sampleNumPerFile = endSampleNum - startSampleNum + 1; %ÿ���ļ���10������
+    
+    fid = fopen(fullfile('Label_CsiAmplitudeCut',user,'ManualSegment.csv'));
+    dcells = textscan(fid, '%f,%f,%f,%f,%s', 'HeaderLines', 1, 'EndOfLine', newline);
     fclose(fid);
     dcellneeds = dcells(1:4);
     cvsSegment = cell2mat(dcellneeds);
     
-    dirMat = ['Data_CsiAmplitudeCut/',userNum];  %'20191211OriginalMatData\user2'
-    SegmentFiles = dir([dirMat,'/','*.mat']); % 55user1_iw_1.mat
+    % dirMat = {'..', '01Data_PreProcess', 'Data_CsiAmplitudeCut',user};  %'20191211OriginalMatData\user2'
+    dirMat = {'..', '01Data_PreProcess', 'Data_CsiAmplitudeCut',user};  %'20191211OriginalMatData\user2'
+    % dirMat = {'Data_CsiAmplitudeCut',userNum};  %'20191211OriginalMatData\user2'
+    SegmentFiles = dir(fullfile(dirMat{:},'*.mat')); % 55user1_iw_1.mat
     numberFiles = length(SegmentFiles);
     
     for whichFile =1:numberFiles
@@ -51,7 +71,7 @@ for userSelect = {'user1' 'user2' 'user3' 'user4' 'user5'}
         
         
         fprintf('selectFile  : %s, matFileName: %s\n', num2str(whichFile), SegmentFiles(whichFile).name)
-        data = load([dirMat,'/',SegmentFiles(whichFile).name]);
+        data = load(fullfile(dirMat{:},SegmentFiles(whichFile).name));
         lowpass = data.data_;
         %lowpass = lowpass(1:20:end,:,:,:);%���ݼ���С��20��
         
@@ -70,9 +90,9 @@ for userSelect = {'user1' 'user2' 'user3' 'user4' 'user5'}
             plot(lowpassDiff(:,1,1))
         end
         k = 1;
-        for i= startSampleNum:1:endAampleNum  %1:1:10
+        for i= startSampleNum:1:endSampleNum  %1:1:10
             rightActionStart = cvsOneFile(i,1);
-            rightActionEnd    = cvsOneFile(i,2);
+            rightActionEnd   = cvsOneFile(i,2);
             
             actionBegin_start =round(rightActionStart-(sampleLen/2)+1);
             actionBegin_end   =round(rightActionStart+(sampleLen/2));
@@ -107,20 +127,21 @@ for userSelect = {'user1' 'user2' 'user3' 'user4' 'user5'}
             
             if(whetherPlot)
                 hold on
-                lineAmp = 0.18;
-                plot([rightActionStart,rightActionStart],[-lineAmp,lineAmp],'c');
-                plot([rightActionEnd,rightActionEnd],[-lineAmp,lineAmp],'c');
+                lineAmp = 5;
+                plot([rightActionStart,rightActionStart],[-lineAmp,lineAmp],'c','LineWidth',2);
+                plot([rightActionEnd,rightActionEnd],[-lineAmp,lineAmp],'c','LineWidth',2);
                 text(cvsOneFile(i,1),lineAmp-0.03,num2str(i),'Color','red');
-                lineAmp = 0.08;
-                plot([actionBegin_start,actionBegin_start],[-lineAmp,lineAmp],'y');
-                plot([actionBegin_end,actionBegin_end],[-lineAmp,lineAmp],'y');
+                lineAmp = 2;
+                plot([actionBegin_start,actionBegin_start],[-lineAmp,lineAmp],'y', 'LineWidth',2);
+                plot([actionBegin_end,actionBegin_end],[-lineAmp,lineAmp],'y', 'LineWidth',2);
                 
-                plot([move_start,move_start],[-lineAmp,lineAmp],'m');
-                plot([move_end,move_end],[-lineAmp,lineAmp],'m');
+                plot([move_start,move_start],[-lineAmp,lineAmp],'m', 'LineWidth',2);
+                plot([move_end,move_end],[-lineAmp,lineAmp],'m', 'LineWidth',2);
                 
-                plot([static_start,static_start],[-lineAmp,lineAmp],'g');
-                plot([static_end,static_end],[-lineAmp,lineAmp],'g');
+                plot([static_start,static_start],[-lineAmp,lineAmp],'g', 'LineWidth',2);
+                plot([static_end,static_end],[-lineAmp,lineAmp],'g', 'LineWidth',2);
                 set(gca,'xticklabel',get(gca,'xtick'),'yticklabel',get(gca,'ytick'));
+                set(gca,'color', [0.8 0.8 0.8]);
                 hold off
             end
         end
@@ -128,9 +149,9 @@ for userSelect = {'user1' 'user2' 'user3' 'user4' 'user5'}
         
         %data_ = data_(1:20:end,:,:,:);%���ݼ���С��20��
         
-        saveName = strrep(SegmentFiles(whichFile).name,'55','');
+        saveName = SegmentFiles(whichFile).name;
         %fprintf('size(data_)         : %s\n', num2str(size(data_)))
-        save([saveDir,'/',saveName], 'data_', '-v7.3')
-        save([saveDir,'/',strrep(saveName,'.mat','_label.mat')], 'label_', '-v7.3')
+        save(fullfile(saveDir{:},saveName), 'data_', '-v7.3')
+        save(fullfile(saveDir{:},strrep(saveName,'.mat','_label.mat')), 'label_', '-v7.3')
     end
 end
